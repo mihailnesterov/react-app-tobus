@@ -3,11 +3,13 @@ import { getBus, getBusStations } from '../api/BusesAPI';
 import { getAllStations } from '../api/StationsAPI';
 import { getAllSeasons } from '../api/SeasonsAPI';
 import { getAllDays } from '../api/DaysAPI';
-
 import BusStationItem from '../components/BusStationItem';
+import Loader from '../components/Loader';
 import { Row, Col, Button } from 'reactstrap';
 
 function Bus(props) {
+
+    const [isLoaderOpen, setLoaderOpen] = useState(false);
 
     const [season, setSeason] = useState(() => {
         const date      = new Date();
@@ -76,9 +78,11 @@ function Bus(props) {
     const [busStations, setBusStations] = useState([]);
     useEffect(() => {
         try {
+            setLoaderOpen(true)
             getBusStations(props.match.params.id, day.id, season.id)
                     .then(res => res.json())
                     .then(res => setBusStations(res.rows))
+                    .then(() => setLoaderOpen(false))
                     .catch(err => setErrors(err));
         } catch (error) {
             console.log('useEffect fetch bus stations error',error);
@@ -135,6 +139,7 @@ function Bus(props) {
 
     return (
         <Row className="mt-0">
+            <Loader isOpen={isLoaderOpen} />
             <Col xs="12">
                 <div className="bg-gray shadow-sm p-1 mt-0 mb-3 d-flex align-items-center justify-content-between">
                     <h2 className="m-2">{ bus.num ? <span className="d-block bg-warning py-1 px-2 text-white shadow-sm">{ bus.num }</span> : false }</h2>

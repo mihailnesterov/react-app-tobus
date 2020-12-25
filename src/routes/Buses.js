@@ -1,15 +1,17 @@
 import React, { useState, useMemo } from 'react';
 import { getAllBuses, getBusesCount } from '../api/BusesAPI';
 import { NavLink } from "react-router-dom";
-import { Nav, ButtonToggle, Button, ButtonGroup, Input } from 'reactstrap';
+import { Nav, ButtonToggle } from 'reactstrap';
 import HeaderDefault from '../components/HeaderDefault'
 import Pagination from '../components/Pagination'
+import Loader from '../components/Loader';
 
 function Buses(props) {
     
     const [optionsOnPageCount] = useState([2,3,5,10,50]);
     const defaultValueOnPageCount = optionsOnPageCount[1];
     const [limit, setLimit] = useState(defaultValueOnPageCount);
+    const [isLoaderOpen, setLoaderOpen] = useState(false);
     
     const [hasError, setErrors] = useState(false);
     const [errorMsg] = useState("Ошибка! Не удалось загрузить маршруты...");
@@ -33,9 +35,11 @@ function Buses(props) {
     const [pageSelected, setPageSelected] = useState(0);
     useMemo(() => {
         try {
+            setLoaderOpen(true)
             getAllBuses(pageSelected,limit)
                 .then(res => res.json())
                 .then(res => setBuses(res.rows))
+                .then(() => setLoaderOpen(false))
                 .catch(err => setErrors(err));
         } catch (error) {
             console.log('useEffect fetch buses error',error);
@@ -52,6 +56,7 @@ function Buses(props) {
     
     return (
         <div>
+            <Loader isOpen={isLoaderOpen} />
             <HeaderDefault pageTitle={props.pageTitle} />
             <Pagination 
                 pageSelected={pageSelected}

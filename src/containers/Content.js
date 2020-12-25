@@ -9,7 +9,7 @@ import Taxi from '../routes/Taxi';
 
 function Content() {
     return (
-        <div className="my-3 pb-2 shadow-sm text-center bg-white">
+        <div className="my-3 pb-2 shadow-sm text-center bg-white position-relative">
             <Switch>
                 <Route path="/" exact render={
                     (props) => (<Buses {...props} 
