@@ -30,23 +30,7 @@ function Buses(props) {
         }
     }, [hasError,errorMsg]);
 
-    //const [pagination, setPaginations] = useState([]);
     const [pageSelected, setPageSelected] = useState(0);
-    /*useMemo( () => {
-        const pages = [];
-        const count = limit > 0 ? Math.ceil(busesCount/limit) : 1;
-        for (let i = 0; i < count; i++) {
-            pages.push({
-                index: i,
-                num: (i+1),
-                active: pageSelected,
-                first: i === 0 ? true : false,
-                last: count === (i+1) ? true : false
-            });
-        }
-        setPaginations(pages);
-    }, [busesCount, pageSelected, limit])*/
-
     useMemo(() => {
         try {
             getAllBuses(pageSelected,limit)
@@ -78,42 +62,6 @@ function Buses(props) {
                 defaultValue={defaultValueOnPageCount}
                 busesCount={busesCount}
             />
-            { /*limit === 0 || pagination.length === 1 ? 
-                null :
-                <div className="mb-2 d-flex align-items-center justify-content-between justify-content-md-center flex-wrap">
-                    
-                    <ButtonGroup className="mx-3">
-                        { pagination.map( item => 
-                            <Button 
-                                key={item.index} 
-                                size="sm" 
-                                color={pageSelected === item.index ? "secondary" : "light" }
-                                onClick={() => setPageSelected(item.index)} 
-                                active={pageSelected === item.index}
-                                className="shadow-none border-0"
-                                style={{width:"35px",height:"30px"}}
-                            >
-                                {item.num}
-                            </Button>
-                        ) }
-                    </ButtonGroup>
-                    <Input 
-                        type="select" 
-                        name="selectOnPageCount" 
-                        id="selectOnPageCount" 
-                        style={{width:"55px",height:"32px"}}
-                        className="px-3 mx-3 text-dark"
-                        onChange={e => { 
-                            setLimit(e.currentTarget.value);
-                            setPageSelected(0);
-                        }}
-                        defaultValue={defaultValueOnPageCount}
-                    >
-                        { optionsOnPageCount.map( item => <option key={item} value={item}>{item}</option>) }
-                    </Input>
-                </div>
-                */}
-
             
             <Nav className="d-flex align-items-start justify-content-center p-0 m-0">
                 {buses.map( bus =>  
