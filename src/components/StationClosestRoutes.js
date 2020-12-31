@@ -26,7 +26,7 @@ function  StationClosestRoutes(props) {
     },[props,hasError,errorMsg]);
 
     return (
-        <div className="d-flex justify-content-between align-items-center px-1">
+        <div className="d-flex justify-content-around align-items-center flex-wrap px-1">
             { routes.length === 0 ? 
                 <Button 
                     color={"link"}

@@ -12,25 +12,19 @@ function Buses(props) {
     const defaultValueOnPageCount = optionsOnPageCount[1];
     const [limit, setLimit] = useState(defaultValueOnPageCount);
     const [isLoaderOpen, setLoaderOpen] = useState(false);
-    
-    const [hasError, setErrors] = useState(false);
-    const [errorMsg] = useState("Ошибка! Не удалось загрузить маршруты...");
-    
     const [buses, setBuses] = useState([]);
+    
     const [busesCount, setBusesCount] = useState(0);
     useMemo(() => {
         try {
             getBusesCount()
                 .then(res => res.json())
                 .then(res => setBusesCount(res.rows[0].count))
-                .catch(err => setErrors(err));
+                .catch(err => console.log(err));
         } catch (error) {
             console.log('useMemo get buses count error',error);
-            if(hasError) {
-                console.log(errorMsg);
-            }
         }
-    }, [hasError,errorMsg]);
+    }, []);
 
     const [pageSelected, setPageSelected] = useState(0);
     useMemo(() => {
@@ -40,14 +34,11 @@ function Buses(props) {
                 .then(res => res.json())
                 .then(res => setBuses(res.rows))
                 .then(() => setLoaderOpen(false))
-                .catch(err => setErrors(err));
+                .catch(err => console.log(err));
         } catch (error) {
             console.log('useEffect fetch buses error',error);
-            if(hasError) {
-                console.log(errorMsg);
-            }
         }
-    }, [pageSelected,limit,hasError,errorMsg]);
+    }, [pageSelected,limit]);
 
     useMemo( () => {
         const setTitle = async () => document.title = await props.pageTitle;

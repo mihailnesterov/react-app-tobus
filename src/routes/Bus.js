@@ -15,7 +15,7 @@ function Bus(props) {
         const date      = new Date();
         const month     = date.getMonth();
         const summer    = [5,6,7,8,9,10].filter( m => m === month);
-        const winter    = [11,12,1,2,3,4].filter( m => m === month);
+        const winter    = [11,12,0,1,2,3,4].filter( m => m === month);
         
         return  winter.length > 0 
                 && summer.length === 0 
@@ -34,8 +34,8 @@ function Bus(props) {
         
         const calendar  = [
             // здесь задаем праздничные даты, по которым также будут определяться выходные
-            '01.01.2020',
-            '08.03.2020',
+            '01.01.2021',
+            '08.03.2021',
         ].filter( item => item === today );
 
         return  workdays.length > 0 
@@ -53,23 +53,17 @@ function Bus(props) {
         });
     }, [season,day]);
 
-    const [hasError, setErrors] = useState(false);
-    const [errorMsg] = useState("Ошибка! Не удалось загрузить данные...");
-
     const [bus, setBus] = useState([]);
     useEffect(() => {
         try {
             getBus(props.match.params.id)
                 .then(res => res.json())
                 .then(res => setBus(res.rows.map(item => item )[0]))
-                .catch(err => setErrors(err));
+                .catch(err => console.log(err));
         } catch (error) {
             console.log('useEffect fetch bus error',error);
-            if(hasError) {
-                console.log(errorMsg);
-            }
         }
-    }, [props,hasError,errorMsg]);
+    }, [props]);
     useEffect( () => {
         const setTitle = async () => document.title = await props.pageTitle + ' ' + bus.num;
         setTitle()
@@ -83,14 +77,11 @@ function Bus(props) {
                     .then(res => res.json())
                     .then(res => setBusStations(res.rows))
                     .then(() => setLoaderOpen(false))
-                    .catch(err => setErrors(err));
+                    .catch(err => console.log(err));
         } catch (error) {
             console.log('useEffect fetch bus stations error',error);
-            if(hasError) {
-                console.log(errorMsg);
-            }
         }
-    }, [props.match.params.id, day.id, season.id,hasError,errorMsg]);
+    }, [props.match.params.id, day.id, season.id]);
 
     const [seasons, setSeasons] = useState([]);
     useMemo(() => {
@@ -98,14 +89,11 @@ function Bus(props) {
             getAllSeasons()
                 .then(res => res.json())
                 .then(res => setSeasons(res.rows))
-                .catch(err => setErrors(err));
+                .catch(err => console.log(err));
         } catch (error) {
             console.log('useEffect fetch seasons error',error);
-            if(hasError) {
-                console.log(errorMsg);
-            }
         }
-    }, [hasError,errorMsg]);
+    }, []);
 
     const [days, setDays] = useState([]);
     useMemo(() => {
@@ -113,14 +101,11 @@ function Bus(props) {
             getAllDays()
                 .then(res => res.json())
                 .then(res => setDays(res.rows))
-                .catch(err => setErrors(err));
+                .catch(err => console.log(err));
         } catch (error) {
             console.log('useEffect fetch days error',error);
-            if(hasError) {
-                console.log(errorMsg);
-            }
         }
-    }, [hasError,errorMsg]);
+    }, []);
 
     const [stations, setStations] = useState([]);
     useEffect(() => {
@@ -128,14 +113,11 @@ function Bus(props) {
             getAllStations()
                 .then(res => res.json())
                 .then(res => setStations(res.rows.filter( item => [...new Set(busStations.map((el) => el.station_id))].includes(item.id))))
-                .catch(err => setErrors(err));
+                .catch(err => console.log(err));
         } catch (error) {
             console.log('useEffect fetch stations error',error);
-            if(hasError) {
-                console.log(errorMsg);
-            }
         }
-    },[busStations,seasons,days,hasError,errorMsg]);
+    },[busStations,seasons,days]);
 
     return (
         <Row className="mt-0">
